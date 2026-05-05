@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import '../../../core/utils/api_services.dart';
+import '../../../core/utils/app_logger.dart';
 import '../../../core/utils/functions/get_books_list.dart';
 import '../../../core/utils/functions/save_book.dart';
 import '../../../contants.dart';
@@ -54,6 +55,10 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   }) async {
     final orderBy = _orderByFor(sord);
     final q = _queryFor(sord, searchName);
+    AppLogger.info(
+      'Remote popular page=$pageNumber query=$q orderBy=$orderBy',
+      name: 'HomeRemoteDataSource',
+    );
     var data = await apiServices.get(
       endPoint:
           'volumes?filter=free-ebooks&orderBy=$orderBy&maxResults=20&q=$q&startIndex=${pageNumber * 20}',
@@ -76,6 +81,10 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   }) async {
     final orderBy = _orderByFor(sord);
     final q = _queryFor(sord, searchName);
+    AppLogger.info(
+      'Remote newest page=$pageNumber query=$q orderBy=$orderBy',
+      name: 'HomeRemoteDataSource',
+    );
     var data = await apiServices.get(
       endPoint:
           'volumes?filter=free-ebooks&orderBy=$orderBy&maxResults=20&q=$q&startIndex=${pageNumber * 20}',
@@ -83,6 +92,10 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
     List<BookEntity> books = getBooksList(data);
     // Fallback: if no items, retry without the free-ebooks filter to broaden results
     if (books.isEmpty) {
+      AppLogger.info(
+        'Remote newest empty, retrying without free-ebooks filter',
+        name: 'HomeRemoteDataSource',
+      );
       data = await apiServices.get(
         endPoint:
             'volumes?orderBy=$orderBy&maxResults=20&q=$q&startIndex=${pageNumber * 20}',
@@ -105,6 +118,10 @@ class HomeRemoteDataSourceImpl extends HomeRemoteDataSource {
   }) async {
     final orderBy = _orderByFor(sord);
     final q = _queryFor(sord, searchName);
+    AppLogger.info(
+      'Remote booksIn page=$pageNumber query=$q orderBy=$orderBy',
+      name: 'HomeRemoteDataSource',
+    );
     var data = await apiServices.get(
       endPoint:
           'volumes?filter=free-ebooks&orderBy=$orderBy&q=$q&startIndex=${pageNumber * 10}',

@@ -1,4 +1,5 @@
 import 'package:code_books/core/errors/failure.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 import 'package:code_books/home/domain/use_cases/fetch_newst_books_use_case.dart';
 import 'package:dartz/dartz.dart';
@@ -18,6 +19,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'programming',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'fetchNewest page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     if (pageNumber == 0) {
       emit(NewestBooksLoading());
     } else {
@@ -33,6 +38,11 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
 
       return result.fold(
         (failure) {
+          AppLogger.error(
+            'fetchNewest failed page=$pageNumber',
+            error: failure,
+            name: 'FetchNewestBooksCubit',
+          );
           if (pageNumber == 0) {
             emit(NewestBooksFailure(failure.message));
           } else {
@@ -41,11 +51,20 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
           return Left(failure);
         },
         (books) {
+          AppLogger.info(
+            'fetchNewest success count=${books.length}',
+            name: 'FetchNewestBooksCubit',
+          );
           emit(NewestBooksSuccess(books));
           return Right(books);
         },
       );
     } catch (e) {
+      AppLogger.error(
+        'fetchNewest unexpected failure',
+        error: e,
+        name: 'FetchNewestBooksCubit',
+      );
       emit(NewestBooksFailure('An unexpected error occurred: ${e.toString()}'));
       return Left(
         ServerFailure('An unexpected error occurred: ${e.toString()}'),
@@ -58,6 +77,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'flutter',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'toggleToFlutter page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     await _fetchBooks(
       pageNumber: pageNumber,
       searchName: searchName,
@@ -72,6 +95,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'Algorithms',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'toggleToAlgorithms page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     await _fetchBooks(
       pageNumber: pageNumber,
       searchName: searchName,
@@ -86,6 +113,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'java script',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'toggleToJavaScript page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     await _fetchBooks(
       pageNumber: pageNumber,
       searchName: searchName,
@@ -100,6 +131,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'python',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'toggleToPython page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     await _fetchBooks(
       pageNumber: pageNumber,
       searchName: searchName,
@@ -114,6 +149,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'php',
     String sord = 'new',
   }) async {
+    AppLogger.info(
+      'toggleToPhp page=$pageNumber search=$searchName sort=$sord',
+      name: 'FetchNewestBooksCubit',
+    );
     await _fetchBooks(
       pageNumber: pageNumber,
       searchName: searchName,
@@ -144,6 +183,11 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
 
     result.fold(
       (failure) {
+        AppLogger.error(
+          '_fetchBooks failed page=$pageNumber search=$searchName',
+          error: failure,
+          name: 'FetchNewestBooksCubit',
+        );
         if (pageNumber == 0) {
           emit(NewestBooksFailure(failure.message));
         } else {
@@ -151,6 +195,10 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
         }
       },
       (books) {
+        AppLogger.info(
+          '_fetchBooks success search=$searchName count=${books.length}',
+          name: 'FetchNewestBooksCubit',
+        );
         emitState(books);
       },
     );

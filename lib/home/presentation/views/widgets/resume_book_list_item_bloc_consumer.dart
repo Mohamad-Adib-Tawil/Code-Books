@@ -1,4 +1,5 @@
 import 'package:code_books/home/domain/entities/book_entity.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/presentation/manger/FetchNewestBooksCubit/fetch_newest_books_cubit.dart';
 import 'package:code_books/home/presentation/views/widgets/resume_book_list_view.dart';
 import 'package:code_books/home/presentation/views/widgets/resume_book_pagination_loading_list_view.dart';
@@ -35,6 +36,7 @@ class _ResumeBookListItemBlocConsumerState
   var nextPage = 1;
   var isLoading = false;
   bool isInitialLoading = false;
+  bool _isFirstPageLoad = false;
 
   CurrentCategory currentCategory = CurrentCategory.all;
 
@@ -55,12 +57,21 @@ class _ResumeBookListItemBlocConsumerState
           ? Hive.box<BookEntity>(allBoxName)
           : await Hive.openBox<BookEntity>(allBoxName);
       if (mounted && books.isEmpty && box.isNotEmpty) {
+        AppLogger.info(
+          'Loaded cached resume list count=${box.length}',
+          name: 'ResumeBookListItemBlocConsumer',
+        );
         setState(() {
           books = box.values.toList();
         });
       }
-    } catch (_) {
-      // ignore cache errors silently
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to load cached resume list',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'ResumeBookListItemBlocConsumer',
+      );
     }
   }
 
@@ -109,33 +120,20 @@ class _ResumeBookListItemBlocConsumerState
     return BlocConsumer<FetchNewestBooksCubit, FetchNewestBooksState>(
       listener: (context, state) {
         if (state is NewestBooksLoading) {
-          // Starting a fresh load for the current category: clear its list and show skeleton
           if (mounted) {
             setState(() {
-              isInitialLoading = true;
+              _isFirstPageLoad = true;
+              isInitialLoading = _currentBooks.isEmpty;
               nextPage = 1;
-              switch (currentCategory) {
-                case CurrentCategory.all:
-                  books = [];
-                  break;
-                case CurrentCategory.flutter:
-                  flutterBooks = [];
-                  break;
-                case CurrentCategory.algorithms:
-                  algorithmsBooks = [];
-                  break;
-                case CurrentCategory.javascript:
-                  javaScriptBooks = [];
-                  break;
-                case CurrentCategory.python:
-                  pythonBooks = [];
-                  break;
-                case CurrentCategory.php:
-                  phpBooks = [];
-                  break;
-              }
             });
           }
+        } else if (state is NewestBooksPaginationLoading ||
+            state is FlutterBooksPaginationLoading ||
+            state is AlgorithmsBooksPaginationLoading ||
+            state is JavaScriptBooksPaginationLoading ||
+            state is PythonBooksPaginationLoading ||
+            state is PhpBooksPaginationLoading) {
+          _isFirstPageLoad = false;
         } else if (state is NewestBooksSuccess) {
           if (mounted) {
             setState(() {
@@ -146,7 +144,12 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.all;
-              books.addAll(state.books);
+              if (_isFirstPageLoad) {
+                books = List<BookEntity>.of(state.books);
+              } else {
+                books.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is FlutterBooks) {
@@ -158,7 +161,12 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.flutter;
-              flutterBooks.addAll(state.books);
+              if (_isFirstPageLoad) {
+                flutterBooks = List<BookEntity>.of(state.books);
+              } else {
+                flutterBooks.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is AlgorithmsBooks) {
@@ -170,7 +178,12 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.algorithms;
-              algorithmsBooks.addAll(state.books);
+              if (_isFirstPageLoad) {
+                algorithmsBooks = List<BookEntity>.of(state.books);
+              } else {
+                algorithmsBooks.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is JavaScriptBooks) {
@@ -182,7 +195,12 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.javascript;
-              javaScriptBooks.addAll(state.books);
+              if (_isFirstPageLoad) {
+                javaScriptBooks = List<BookEntity>.of(state.books);
+              } else {
+                javaScriptBooks.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is PythonBooks) {
@@ -194,7 +212,12 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.python;
-              pythonBooks.addAll(state.books);
+              if (_isFirstPageLoad) {
+                pythonBooks = List<BookEntity>.of(state.books);
+              } else {
+                pythonBooks.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is PhpBooks) {
@@ -206,13 +229,24 @@ class _ResumeBookListItemBlocConsumerState
                 nextPage = 1;
               }
               currentCategory = CurrentCategory.php;
-              phpBooks.addAll(state.books);
+              if (_isFirstPageLoad) {
+                phpBooks = List<BookEntity>.of(state.books);
+              } else {
+                phpBooks.addAll(state.books);
+              }
+              _isFirstPageLoad = false;
             });
           }
         } else if (state is NewestBooksFailure) {
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(buildErrorWidget(state.errMessage));
+          AppLogger.error(
+            'Resume list refresh failed: ${state.errMessage}',
+            name: 'ResumeBookListItemBlocConsumer',
+          );
+          if (_hasAnyBooks) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(buildErrorWidget(state.errMessage));
+          }
         } else if (state is NewestBooksPaginationFailure) {
           ScaffoldMessenger.of(
             context,
@@ -268,7 +302,14 @@ class _ResumeBookListItemBlocConsumerState
           );
           visualCategory = CurrentCategory.php;
         } else if (state is NewestBooksFailure) {
-          child = Center(child: Text(state.errMessage));
+          if (_currentBooks.isNotEmpty) {
+            child = ResumeBookListView(
+              books: _currentBooks,
+              scrollController: widget.scrollController,
+            );
+          } else {
+            child = Center(child: Text(state.errMessage));
+          }
         } else {
           // Initial/other states: show cached 'All' if available
           if (books.isNotEmpty) {
@@ -300,4 +341,29 @@ class _ResumeBookListItemBlocConsumerState
       },
     );
   }
+
+  List<BookEntity> get _currentBooks {
+    switch (currentCategory) {
+      case CurrentCategory.all:
+        return books;
+      case CurrentCategory.flutter:
+        return flutterBooks;
+      case CurrentCategory.algorithms:
+        return algorithmsBooks;
+      case CurrentCategory.javascript:
+        return javaScriptBooks;
+      case CurrentCategory.python:
+        return pythonBooks;
+      case CurrentCategory.php:
+        return phpBooks;
+    }
+  }
+
+  bool get _hasAnyBooks =>
+      books.isNotEmpty ||
+      flutterBooks.isNotEmpty ||
+      algorithmsBooks.isNotEmpty ||
+      javaScriptBooks.isNotEmpty ||
+      pythonBooks.isNotEmpty ||
+      phpBooks.isNotEmpty;
 }

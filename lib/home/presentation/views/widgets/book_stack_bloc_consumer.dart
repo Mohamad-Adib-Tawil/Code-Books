@@ -1,4 +1,5 @@
 import 'package:code_books/core/utils/functions/build_error_snack_bar.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 import 'package:code_books/home/presentation/manger/popular_books_cubit/cubit/popular_books_cubit_cubit.dart';
 import 'package:code_books/home/presentation/views/widgets/book_stack_list_view.dart';
@@ -20,6 +21,7 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
   List<BookEntity> books = [];
   List<BookEntity> booksTrend = [];
   List<BookEntity> booksNewest = [];
+  bool _isFirstPageRefresh = false;
 
   @override
   void initState() {
@@ -47,14 +49,23 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
           : await Hive.openBox<BookEntity>(trendBoxName);
 
       if (mounted) {
+        AppLogger.info(
+          'Loaded cached stack lists popular=${popularBox.length} newest=${newestBox.length} trend=${trendBox.length}',
+          name: 'BookStackListBlocConsumer',
+        );
         setState(() {
           books = popularBox.values.toList();
           booksNewest = newestBox.values.toList();
           booksTrend = trendBox.values.toList();
         });
       }
-    } catch (_) {
-      // ignore cache load errors silently
+    } catch (e, stackTrace) {
+      AppLogger.error(
+        'Failed to load cached stack lists',
+        error: e,
+        stackTrace: stackTrace,
+        name: 'BookStackListBlocConsumer',
+      );
     }
   }
 
@@ -64,36 +75,62 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
       bloc: context.read<PopularBooksCubit>(),
       listener: (context, state) {
         if (state is PopularBooksLoading) {
-          // A fresh category load has started: clear existing lists so UI doesn't show stale items
-          if (mounted) {
-            setState(() {
-              books = [];
-              booksNewest = [];
-              booksTrend = [];
-            });
-          }
+          _isFirstPageRefresh = true;
+          AppLogger.info(
+            'Popular stack loading, keeping current lists',
+            name: 'BookStackListBlocConsumer',
+          );
+        } else if (state is PopularBooksPaginationLoading) {
+          _isFirstPageRefresh = false;
         } else if (state is PopularBooksSuccess) {
           if (mounted) {
             setState(() {
-              books.addAll(state.books);
+              if (_isFirstPageRefresh) {
+                books = List<BookEntity>.of(state.books);
+              } else {
+                books.addAll(state.books);
+              }
+              _isFirstPageRefresh = false;
             });
           }
         } else if (state is PopularBooksNewest) {
           if (mounted) {
             setState(() {
-              booksNewest.addAll(state.books);
+              if (_isFirstPageRefresh) {
+                booksNewest = List<BookEntity>.of(state.books);
+              } else {
+                booksNewest.addAll(state.books);
+              }
+              _isFirstPageRefresh = false;
             });
           }
         } else if (state is PopularBooksTrend) {
           if (mounted) {
             setState(() {
-              booksTrend.addAll(state.books);
+              if (_isFirstPageRefresh) {
+                booksTrend = List<BookEntity>.of(state.books);
+              } else {
+                booksTrend.addAll(state.books);
+              }
+              _isFirstPageRefresh = false;
             });
           }
         } else if (state is PopularBooksPaginationFailure) {
           ScaffoldMessenger.of(
             context,
           ).showSnackBar(buildErrorWidget(state.errMessage));
+        } else if (state is PopularBooksFailure) {
+          AppLogger.error(
+            'Popular stack refresh failed: ${state.errMessage}',
+            name: 'BookStackListBlocConsumer',
+          );
+          if (books.isNotEmpty ||
+              booksNewest.isNotEmpty ||
+              booksTrend.isNotEmpty) {
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(buildErrorWidget(state.errMessage));
+          }
         }
       },
       builder: (context, state) {
@@ -101,9 +138,13 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
         String visualKey = 'popular';
 
         if (state is PopularBooksLoading) {
-          // Always show skeleton when a new category starts loading.
-          child = const BookStackPAginationListView();
-          visualKey = 'loading';
+          if (books.isNotEmpty) {
+            child = BookStackListView(books: books);
+            visualKey = 'popular';
+          } else {
+            child = const BookStackPAginationListView();
+            visualKey = 'loading';
+          }
         } else if (state is PopularBooksPaginationLoading) {
           // Keep showing accumulated list while next page loads
           child = BookStackListView(books: books);
@@ -118,8 +159,19 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
           child = BookStackListView(books: booksTrend);
           visualKey = 'trend';
         } else if (state is PopularBooksFailure) {
-          child = Center(child: Text(state.errMessage));
-          visualKey = 'error';
+          if (books.isNotEmpty) {
+            child = BookStackListView(books: books);
+            visualKey = 'popular';
+          } else if (booksNewest.isNotEmpty) {
+            child = BookStackListView(books: booksNewest);
+            visualKey = 'new';
+          } else if (booksTrend.isNotEmpty) {
+            child = BookStackListView(books: booksTrend);
+            visualKey = 'trend';
+          } else {
+            child = Center(child: Text(state.errMessage));
+            visualKey = 'error';
+          }
         } else {
           child = const SizedBox.shrink();
           visualKey = 'empty';

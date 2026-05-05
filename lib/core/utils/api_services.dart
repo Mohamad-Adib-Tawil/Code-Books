@@ -1,5 +1,6 @@
 import 'package:code_books/core/errors/failure.dart';
 import 'package:code_books/core/errors/retry.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:dio/dio.dart';
 
 class ApiServices {
@@ -21,9 +22,14 @@ class ApiServices {
 
   Future<Map<String, dynamic>> get({required String endPoint}) async {
     try {
+      AppLogger.info('GET $endPoint', name: 'ApiServices');
       var response = await retry(
         () async {
           final response = await _dio.get<Map<String, dynamic>>(endPoint);
+          AppLogger.info(
+            'GET $endPoint -> ${response.statusCode}',
+            name: 'ApiServices',
+          );
           return response.data ?? <String, dynamic>{};
         },
         retries: 3,
@@ -32,8 +38,19 @@ class ApiServices {
 
       return response;
     } on DioException catch (e) {
+      AppLogger.error(
+        'Dio request failed: GET $endPoint',
+        error: e,
+        stackTrace: e.stackTrace,
+        name: 'ApiServices',
+      );
       throw ServerFailure.fromDioException(e);
     } catch (e) {
+      AppLogger.error(
+        'Unexpected request failure: GET $endPoint',
+        error: e,
+        name: 'ApiServices',
+      );
       throw ServerFailure(e.toString());
     }
   }

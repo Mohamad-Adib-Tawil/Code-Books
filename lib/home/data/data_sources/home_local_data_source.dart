@@ -1,20 +1,21 @@
 import 'package:code_books/contants.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:hive/hive.dart';
 
 import '../../domain/entities/book_entity.dart';
 
 abstract class HomeLocalDataSource {
-  List<BookEntity> fetchPopularBooks({
+  Future<List<BookEntity>> fetchPopularBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'popular',
   });
-  List<BookEntity> fetchNewestBooks({
+  Future<List<BookEntity>> fetchNewestBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'new',
   });
-  List<BookEntity> fetchBooksIn({
+  Future<List<BookEntity>> fetchBooksIn({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'newest',
@@ -26,65 +27,73 @@ abstract class HomeLocalDataSource {
 ///////////////////////////////////////////////////////////////////////////////////////
 class HomeLocalDataSourceImpl extends HomeLocalDataSource {
   @override
-  List<BookEntity> fetchPopularBooks({
+  Future<List<BookEntity>> fetchPopularBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'popular',
-  }) {
-    final boxName = boxNameFor(sord, searchName);
-    if (!Hive.isBoxOpen(boxName)) {
-      return [];
-    }
-    var box = Hive.box<BookEntity>(boxName);
-    int length = box.values.length;
-    int startIndex = pageNumber * 10;
-    int endIndex = (pageNumber + 1) * 10;
-
-    if (startIndex >= length || endIndex > length) {
-      return [];
-    }
-    return box.values.toList().sublist(startIndex, endIndex);
+  }) async {
+    return _fetchBooksPage(
+      pageNumber: pageNumber,
+      searchName: searchName,
+      sord: sord,
+    );
   }
 
   @override
-  List<BookEntity> fetchNewestBooks({
+  Future<List<BookEntity>> fetchNewestBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'new',
-  }) {
-    final boxName = boxNameFor(sord, searchName);
-    if (!Hive.isBoxOpen(boxName)) {
-      return [];
-    }
-    var box = Hive.box<BookEntity>(boxName);
-    int length = box.values.length;
-    int startIndex = pageNumber * 10;
-    int endIndex = (pageNumber + 1) * 10;
-
-    if (startIndex >= length || endIndex > length) {
-      return [];
-    }
-    return box.values.toList().sublist(startIndex, endIndex);
+  }) async {
+    return _fetchBooksPage(
+      pageNumber: pageNumber,
+      searchName: searchName,
+      sord: sord,
+    );
   }
 
   @override
-  List<BookEntity> fetchBooksIn({
+  Future<List<BookEntity>> fetchBooksIn({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'newest',
-  }) {
-    final boxName = boxNameFor(sord, searchName);
-    if (!Hive.isBoxOpen(boxName)) {
-      return [];
-    }
-    var box = Hive.box<BookEntity>(boxName);
-    int length = box.values.length;
-    int startIndex = pageNumber * 10;
-    int endIndex = (pageNumber + 1) * 10;
+  }) async {
+    return _fetchBooksPage(
+      pageNumber: pageNumber,
+      searchName: searchName,
+      sord: sord,
+    );
+  }
 
-    if (startIndex >= length || endIndex > length) {
+  Future<List<BookEntity>> _fetchBooksPage({
+    required int pageNumber,
+    required String searchName,
+    required String sord,
+  }) async {
+    final boxName = boxNameFor(sord, searchName);
+    final box = Hive.isBoxOpen(boxName)
+        ? Hive.box<BookEntity>(boxName)
+        : await Hive.openBox<BookEntity>(boxName);
+    final length = box.values.length;
+    final startIndex = pageNumber * 10;
+    final endIndex = (pageNumber + 1) * 10;
+
+    if (startIndex >= length) {
+      AppLogger.info(
+        'Cache miss box=$boxName page=$pageNumber length=$length',
+        name: 'HomeLocalDataSource',
+      );
       return [];
     }
-    return box.values.toList().sublist(startIndex, endIndex);
+
+    final books = box.values.toList().sublist(
+      startIndex,
+      endIndex > length ? length : endIndex,
+    );
+    AppLogger.info(
+      'Cache hit box=$boxName page=$pageNumber count=${books.length}',
+      name: 'HomeLocalDataSource',
+    );
+    return books;
   }
 }

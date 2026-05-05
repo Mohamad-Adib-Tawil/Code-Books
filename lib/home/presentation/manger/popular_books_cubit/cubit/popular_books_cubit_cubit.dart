@@ -1,3 +1,4 @@
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 import 'package:code_books/home/domain/use_cases/fetch_newst_books_use_case.dart';
 import 'package:code_books/home/domain/use_cases/fetch_popular_books_use_case.dart';
@@ -17,6 +18,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     String searchName = 'programming',
     String sord = 'popular',
   }) async {
+    AppLogger.info(
+      'fetchPopular page=$pageNumber search=$searchName sort=$sord',
+      name: 'PopularBooksCubit',
+    );
     if (pageNumber == 0) {
       emit(PopularBooksLoading());
     } else {
@@ -31,6 +36,11 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
 
     result.fold(
       (l) {
+        AppLogger.error(
+          'fetchPopular failed page=$pageNumber',
+          error: l,
+          name: 'PopularBooksCubit',
+        );
         if (pageNumber == 0) {
           emit(PopularBooksFailure(l.toString()));
         } else {
@@ -38,6 +48,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
         }
       },
       (r) {
+        AppLogger.info(
+          'fetchPopular success count=${r.length}',
+          name: 'PopularBooksCubit',
+        );
         emit(PopularBooksSuccess(r));
       },
     );
@@ -48,6 +62,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     String searchName = 'programming',
     String sord = 'popular',
   }) async {
+    AppLogger.info(
+      'fetchOtherPopular page=$pageNumber search=$searchName sort=$sord',
+      name: 'PopularBooksCubit',
+    );
     if (pageNumber == 0) {
       emit(PopularBooksLoading());
     } else {
@@ -62,6 +80,11 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
 
     result.fold(
       (l) {
+        AppLogger.error(
+          'fetchOtherPopular failed page=$pageNumber',
+          error: l,
+          name: 'PopularBooksCubit',
+        );
         if (pageNumber == 0) {
           emit(PopularBooksFailure(l.toString()));
         } else {
@@ -69,6 +92,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
         }
       },
       (r) {
+        AppLogger.info(
+          'fetchOtherPopular success count=${r.length}',
+          name: 'PopularBooksCubit',
+        );
         emit(PopularBooksSuccessOtherBook(r));
       },
     );
@@ -79,6 +106,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     String searchName = 'programming',
     String sord = 'relevance',
   }) async {
+    AppLogger.info(
+      'toggleToTrend page=$pageNumber search=$searchName sort=$sord',
+      name: 'PopularBooksCubit',
+    );
     if (pageNumber == 0) {
       emit(PopularBooksLoading());
     } else {
@@ -91,6 +122,11 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     );
     result.fold(
       (l) {
+        AppLogger.error(
+          'toggleToTrend failed page=$pageNumber',
+          error: l,
+          name: 'PopularBooksCubit',
+        );
         if (pageNumber == 0) {
           emit(PopularBooksFailure(l.toString()));
         } else {
@@ -98,6 +134,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
         }
       },
       (r) {
+        AppLogger.info(
+          'toggleToTrend success count=${r.length}',
+          name: 'PopularBooksCubit',
+        );
         emit(PopularBooksTrend(r));
       },
     );
@@ -108,6 +148,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     String searchName = 'programming',
     String sord = 'newest',
   }) async {
+    AppLogger.info(
+      'toggleToNewest page=$pageNumber search=$searchName sort=$sord',
+      name: 'PopularBooksCubit',
+    );
     if (pageNumber == 0) {
       emit(PopularBooksLoading());
     } else {
@@ -120,6 +164,11 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
     );
     result.fold(
       (l) {
+        AppLogger.error(
+          'toggleToNewest failed page=$pageNumber',
+          error: l,
+          name: 'PopularBooksCubit',
+        );
         if (pageNumber == 0) {
           emit(PopularBooksFailure(l.toString()));
         } else {
@@ -127,6 +176,10 @@ class PopularBooksCubit extends Cubit<PopularBooksCubitState> {
         }
       },
       (r) {
+        AppLogger.info(
+          'toggleToNewest success count=${r.length}',
+          name: 'PopularBooksCubit',
+        );
         emit(PopularBooksNewest(r));
       },
     );

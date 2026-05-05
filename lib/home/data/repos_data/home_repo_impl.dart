@@ -1,4 +1,5 @@
 import 'package:code_books/core/errors/failure.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/data/data_sources/home_local_data_source.dart';
 import 'package:code_books/home/data/data_sources/home_remote_data_source.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
@@ -19,12 +20,20 @@ class HomeRepoImpl extends HomeRepo {
   }) async {
     List<BookEntity> booksList;
     try {
-      booksList = homeLocalDataSource.fetchPopularBooks(
+      AppLogger.info(
+        'fetchPopularBooks page=$pageNumber search=$searchName sort=$sord',
+        name: 'HomeRepoImpl',
+      );
+      booksList = await homeLocalDataSource.fetchPopularBooks(
         pageNumber: pageNumber,
         searchName: searchName,
         sord: sord,
       );
       if (booksList.isNotEmpty) {
+        AppLogger.info(
+          'fetchPopularBooks served from cache count=${booksList.length}',
+          name: 'HomeRepoImpl',
+        );
         return right(booksList);
       }
       booksList = await homeRemoteDataSource.fetchPopularBooks(
@@ -32,7 +41,18 @@ class HomeRepoImpl extends HomeRepo {
         searchName: searchName,
         sord: sord,
       );
+      AppLogger.info(
+        'fetchPopularBooks served from remote count=${booksList.length}',
+        name: 'HomeRepoImpl',
+      );
       return right(booksList);
+    } on Failure catch (e) {
+      AppLogger.error(
+        'fetchPopularBooks failed',
+        error: e,
+        name: 'HomeRepoImpl',
+      );
+      return left(e);
     } catch (e) {
       if (e is DioException) {
         return left(ServerFailure.fromDioException(e));
@@ -49,12 +69,20 @@ class HomeRepoImpl extends HomeRepo {
   }) async {
     List<BookEntity> booksList;
     try {
-      booksList = homeLocalDataSource.fetchNewestBooks(
+      AppLogger.info(
+        'fetchNewestBooks page=$pageNumber search=$searchName sort=$sord',
+        name: 'HomeRepoImpl',
+      );
+      booksList = await homeLocalDataSource.fetchNewestBooks(
         pageNumber: pageNumber,
         searchName: searchName,
         sord: sord,
       );
       if (booksList.isNotEmpty) {
+        AppLogger.info(
+          'fetchNewestBooks served from cache count=${booksList.length}',
+          name: 'HomeRepoImpl',
+        );
         return right(booksList);
       }
       booksList = await homeRemoteDataSource.fetchNewestBooks(
@@ -62,7 +90,18 @@ class HomeRepoImpl extends HomeRepo {
         searchName: searchName,
         sord: sord,
       );
+      AppLogger.info(
+        'fetchNewestBooks served from remote count=${booksList.length}',
+        name: 'HomeRepoImpl',
+      );
       return right(booksList);
+    } on Failure catch (e) {
+      AppLogger.error(
+        'fetchNewestBooks failed',
+        error: e,
+        name: 'HomeRepoImpl',
+      );
+      return left(e);
     } catch (e) {
       if (e is DioException) {
         return left(ServerFailure.fromDioException(e));
@@ -79,12 +118,20 @@ class HomeRepoImpl extends HomeRepo {
   }) async {
     List<BookEntity> booksList;
     try {
-      booksList = homeLocalDataSource.fetchBooksIn(
+      AppLogger.info(
+        'fetchBooksIn page=$pageNumber search=$searchName sort=$sord',
+        name: 'HomeRepoImpl',
+      );
+      booksList = await homeLocalDataSource.fetchBooksIn(
         pageNumber: pageNumber,
         searchName: searchName,
         sord: sord,
       );
       if (booksList.isNotEmpty) {
+        AppLogger.info(
+          'fetchBooksIn served from cache count=${booksList.length}',
+          name: 'HomeRepoImpl',
+        );
         return right(booksList);
       }
       booksList = await homeRemoteDataSource.fetchBooksIn(
@@ -92,7 +139,14 @@ class HomeRepoImpl extends HomeRepo {
         searchName: searchName,
         sord: sord,
       );
+      AppLogger.info(
+        'fetchBooksIn served from remote count=${booksList.length}',
+        name: 'HomeRepoImpl',
+      );
       return right(booksList);
+    } on Failure catch (e) {
+      AppLogger.error('fetchBooksIn failed', error: e, name: 'HomeRepoImpl');
+      return left(e);
     } catch (e) {
       if (e is DioException) {
         return left(ServerFailure.fromDioException(e));

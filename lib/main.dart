@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:ui';
 
 import 'package:code_books/contants.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/core/utils/simple_bloc_observer.dart';
 import 'package:code_books/home/data/repos_data/home_repo_impl.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
@@ -22,9 +23,21 @@ void main() async {
       WidgetsFlutterBinding.ensureInitialized();
 
       FlutterError.onError = (details) {
+        AppLogger.error(
+          'Flutter framework error',
+          error: details.exception,
+          stackTrace: details.stack,
+          name: 'Main',
+        );
         FlutterError.presentError(details);
       };
       PlatformDispatcher.instance.onError = (error, stack) {
+        AppLogger.error(
+          'Uncaught platform error',
+          error: error,
+          stackTrace: stack,
+          name: 'Main',
+        );
         return true;
       };
 
@@ -40,6 +53,12 @@ void main() async {
       runApp(const MyApp());
     },
     (error, stack) {
+      AppLogger.error(
+        'Uncaught zone error',
+        error: error,
+        stackTrace: stack,
+        name: 'Main',
+      );
       FlutterError.reportError(
         FlutterErrorDetails(exception: error, stack: stack),
       );

@@ -1,6 +1,7 @@
 import 'package:code_books/home/presentation/views/widgets/home_view_body.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:code_books/core/utils/app_logger.dart';
 import 'package:code_books/home/presentation/manger/popular_books_cubit/cubit/popular_books_cubit_cubit.dart';
 import 'package:code_books/home/presentation/manger/FetchNewestBooksCubit/fetch_newest_books_cubit.dart';
 
@@ -18,6 +19,10 @@ class _HomeViewState extends State<HomeView> {
     // Silent refresh after the first frame to keep cached UI visible.
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (!mounted) return;
+      AppLogger.info(
+        'HomeView entered: refreshing home lists',
+        name: 'HomeView',
+      );
       // Refresh Popular
       context.read<PopularBooksCubit>().fetchPopualrBooks(
         pageNumber: 0,

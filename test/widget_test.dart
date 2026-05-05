@@ -113,29 +113,29 @@ class _FakeRemoteDataSource extends HomeRemoteDataSource {
 
 class _FakeLocalDataSource extends HomeLocalDataSource {
   @override
-  List<BookEntity> fetchPopularBooks({
+  Future<List<BookEntity>> fetchPopularBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'popular',
-  }) {
+  }) async {
     return <BookEntity>[];
   }
 
   @override
-  List<BookEntity> fetchNewestBooks({
+  Future<List<BookEntity>> fetchNewestBooks({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'new',
-  }) {
+  }) async {
     return <BookEntity>[];
   }
 
   @override
-  List<BookEntity> fetchBooksIn({
+  Future<List<BookEntity>> fetchBooksIn({
     int pageNumber = 0,
     String searchName = 'programming',
     String sord = 'newest',
-  }) {
+  }) async {
     return <BookEntity>[];
   }
 }
