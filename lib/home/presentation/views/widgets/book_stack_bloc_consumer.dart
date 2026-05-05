@@ -9,9 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class BookStackListBlocConsumer extends StatefulWidget {
-  const BookStackListBlocConsumer({
-    super.key,
-  });
+  const BookStackListBlocConsumer({super.key});
 
   @override
   State<BookStackListBlocConsumer> createState() =>
@@ -93,9 +91,9 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
             });
           }
         } else if (state is PopularBooksPaginationFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildErrorWidget(state.errMessage),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(buildErrorWidget(state.errMessage));
         }
       },
       builder: (context, state) {
@@ -141,10 +139,7 @@ class _BookStackListBlocConsumerState extends State<BookStackListBlocConsumer> {
               child: SlideTransition(position: slide, child: widget),
             );
           },
-          child: KeyedSubtree(
-            key: ValueKey(visualKey),
-            child: child,
-          ),
+          child: KeyedSubtree(key: ValueKey(visualKey), child: child),
         );
       },
     );

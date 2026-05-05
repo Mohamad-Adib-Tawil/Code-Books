@@ -4,10 +4,7 @@ import '../../../../contants.dart';
 
 class BookRating extends StatelessWidget {
   final num score;
-  const BookRating({
-    Key? key,
-    required this.score,
-  }) : super(key: key);
+  const BookRating({super.key, required this.score});
 
   @override
   Widget build(BuildContext context) {
@@ -20,24 +17,17 @@ class BookRating extends StatelessWidget {
           BoxShadow(
             offset: const Offset(3, 7),
             blurRadius: 20,
-            color: kShadowColor.withOpacity(.9),
+            color: kShadowColor.withValues(alpha: .9),
           ),
         ],
       ),
       child: Column(
         children: <Widget>[
-          const Icon(
-            Icons.star,
-            color: kIconColor,
-            size: 15,
-          ),
+          const Icon(Icons.star, color: kIconColor, size: 15),
           const SizedBox(height: 5),
           Text(
             "$score",
-            style: const TextStyle(
-              fontSize: 12,
-              fontWeight: FontWeight.bold,
-            ),
+            style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
           ),
         ],
       ),

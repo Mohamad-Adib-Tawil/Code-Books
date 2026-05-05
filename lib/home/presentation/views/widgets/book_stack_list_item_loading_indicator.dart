@@ -49,9 +49,10 @@ class _BookStackListItemLoadingIndicatorState
               child: Text(
                 '',
                 style: TextStyle(
-                    color: kWhiteColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  color: kWhiteColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -64,9 +65,10 @@ class _BookStackListItemLoadingIndicatorState
                 '',
                 overflow: TextOverflow.ellipsis,
                 style: TextStyle(
-                    color: kWhiteColor,
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500),
+                  color: kWhiteColor,
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

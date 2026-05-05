@@ -5,27 +5,26 @@ sealed class FetchBooksInState {}
 
 final class FetchBooksInInitial extends FetchBooksInState {}
 
+final class FetchBooksInCubitInitial extends FetchBooksInState {}
 
-final class  FetchBooksInCubitInitial extends FetchBooksInState {}
+class FetchBooksInLoading extends FetchBooksInState {}
 
-class  FetchBooksInLoading extends FetchBooksInState {}
+class FetchBooksInPaginationLoading extends FetchBooksInState {}
 
-class  FetchBooksInPaginationLoading extends FetchBooksInState {}
-
-class  FetchBooksInPaginationFailure extends FetchBooksInState {
+class FetchBooksInPaginationFailure extends FetchBooksInState {
   final String errMessage;
 
-   FetchBooksInPaginationFailure(this.errMessage);
+  FetchBooksInPaginationFailure(this.errMessage);
 }
 
-class  FetchBooksInFailure extends FetchBooksInState {
+class FetchBooksInFailure extends FetchBooksInState {
   final String errMessage;
 
-   FetchBooksInFailure(this.errMessage);
+  FetchBooksInFailure(this.errMessage);
 }
 
-class  FetchBooksInSuccess extends FetchBooksInState {
+class FetchBooksInSuccess extends FetchBooksInState {
   final List<BookEntity> books;
 
-   FetchBooksInSuccess(this.books);
+  FetchBooksInSuccess(this.books);
 }

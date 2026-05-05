@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'dart:ui';
+
 import 'package:code_books/contants.dart';
 import 'package:code_books/core/utils/simple_bloc_observer.dart';
 import 'package:code_books/home/data/repos_data/home_repo_impl.dart';
@@ -14,14 +17,34 @@ import 'core/utils/app_router.dart';
 import 'package:code_books/core/utils/functions/setup_service_locator.dart';
 
 void main() async {
-  await Hive.initFlutter();
-  Hive.registerAdapter(BookEntityAdapter());
-  await Hive.openBox<BookEntity>(kPopularBox);
-  await Hive.openBox<BookEntity>(kNewestBox);
+  runZonedGuarded(
+    () async {
+      WidgetsFlutterBinding.ensureInitialized();
 
-  setupServiceLocator();
-  Bloc.observer = SimpleBlocObserver();
-  runApp(const MyApp());
+      FlutterError.onError = (details) {
+        FlutterError.presentError(details);
+      };
+      PlatformDispatcher.instance.onError = (error, stack) {
+        return true;
+      };
+
+      await Hive.initFlutter();
+      if (!Hive.isAdapterRegistered(0)) {
+        Hive.registerAdapter(BookEntityAdapter());
+      }
+      await Hive.openBox<BookEntity>(kPopularBox);
+      await Hive.openBox<BookEntity>(kNewestBox);
+
+      setupServiceLocator();
+      Bloc.observer = SimpleBlocObserver();
+      runApp(const MyApp());
+    },
+    (error, stack) {
+      FlutterError.reportError(
+        FlutterErrorDetails(exception: error, stack: stack),
+      );
+    },
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -30,18 +53,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context) {
-          return PopularBooksCubit(
-            FetchPopualrBooksUseCase(getIt.get<HomeRepoImpl>()),
-            FetchNewestBooksUseCase(getIt.get<HomeRepoImpl>()),
-          )
-            ..fetchPopualrBooks();
-        }),
-        BlocProvider(create: (context) {
-          return FetchNewestBooksCubit(
-              FetchNewestBooksUseCase(getIt.get<HomeRepoImpl>()))
-            ..fetchNewestBooks();
-        }),
+        BlocProvider(
+          create: (context) {
+            return PopularBooksCubit(
+              FetchPopualrBooksUseCase(getIt.get<HomeRepoImpl>()),
+              FetchNewestBooksUseCase(getIt.get<HomeRepoImpl>()),
+            )..fetchPopualrBooks();
+          },
+        ),
+        BlocProvider(
+          create: (context) {
+            return FetchNewestBooksCubit(
+              FetchNewestBooksUseCase(getIt.get<HomeRepoImpl>()),
+            )..fetchNewestBooks();
+          },
+        ),
       ],
       child: MaterialApp.router(
         routerConfig: AppRouter.router,

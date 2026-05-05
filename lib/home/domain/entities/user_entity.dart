@@ -5,17 +5,9 @@ class User {
   final String id;
   final String name;
   final String email;
-  User({
-    required this.id,
-    required this.name,
-    required this.email,
-  });
+  User({required this.id, required this.name, required this.email});
 
-  User copyWith({
-    String? id,
-    String? name,
-    String? email,
-  }) {
+  User copyWith({String? id, String? name, String? email}) {
     return User(
       id: id ?? this.id,
       name: name ?? this.name,
@@ -24,11 +16,7 @@ class User {
   }
 
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-      'email': email,
-    };
+    return <String, dynamic>{'id': id, 'name': name, 'email': email};
   }
 
   factory User.fromMap(Map<String, dynamic> map) {

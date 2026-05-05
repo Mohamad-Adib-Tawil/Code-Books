@@ -14,7 +14,7 @@ class BoookDetailsView extends StatelessWidget {
     return Scaffold(
       backgroundColor: kDarkBlackColor,
       appBar: AppBar(
-        backgroundColor: const Color(0xFF313131).withOpacity(.35),
+        backgroundColor: const Color(0xFF313131).withValues(alpha: .35),
 
         elevation: 0,
         centerTitle: true,

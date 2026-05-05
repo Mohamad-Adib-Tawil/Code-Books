@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:dartz/dartz.dart';
 
 import 'package:code_books/core/errors/failure.dart';
@@ -13,11 +11,15 @@ class FetchBooksInBooksUseCase extends UseCase<List<BookEntity>, int> {
 
   FetchBooksInBooksUseCase(this.homeRepo);
   @override
-  Future<Either<Failure, List<BookEntity>>> call([int param = 0,   String searchName = 'programming',  String sord = 'newest' ]) async {
+  Future<Either<Failure, List<BookEntity>>> call([
+    int param = 0,
+    String searchName = 'programming',
+    String sord = 'newest',
+  ]) async {
     return await homeRepo.fetchBooksIn(
       pageNumber: param,
       searchName: searchName,
       sord: sord,
     );
   }
-} 
+}

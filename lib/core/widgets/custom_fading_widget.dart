@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class CustomFadingWidget extends StatefulWidget {
   const CustomFadingWidget({super.key, required this.child});
 
@@ -17,9 +18,14 @@ class _CustomFadingWidgetState extends State<CustomFadingWidget>
   void initState() {
     super.initState();
     animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 800));
+      vsync: this,
+      duration: const Duration(milliseconds: 800),
+    );
 
-    animation = Tween<double>(begin: 0.2, end: 0.8).animate(animationController);
+    animation = Tween<double>(
+      begin: 0.2,
+      end: 0.8,
+    ).animate(animationController);
 
     animationController.addListener(() {
       if (mounted) {
@@ -32,16 +38,12 @@ class _CustomFadingWidgetState extends State<CustomFadingWidget>
 
   @override
   void dispose() {
-    
     animationController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: animation.value,
-      child: widget.child,
-    );
+    return Opacity(opacity: animation.value, child: widget.child);
   }
 }

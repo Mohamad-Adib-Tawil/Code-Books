@@ -8,7 +8,8 @@ Widget indicator(bool isActive) {
     height: 8.0,
     width: isActive ? 28 : 8,
     decoration: BoxDecoration(
-        color: isActive ? kPrimaryColor : kSliverColor,
-        borderRadius: BorderRadius.circular(20)),
+      color: isActive ? kPrimaryColor : kSliverColor,
+      borderRadius: BorderRadius.circular(20),
+    ),
   );
 }

@@ -20,6 +20,7 @@ class PopularBooksNewest extends PopularBooksCubitState {
 
   PopularBooksNewest(this.books);
 }
+
 class PopularBooksPaginationFailure extends PopularBooksCubitState {
   final String errMessage;
 
@@ -37,6 +38,7 @@ class PopularBooksSuccess extends PopularBooksCubitState {
 
   PopularBooksSuccess(this.books);
 }
+
 class PopularBooksSuccessOtherBook extends PopularBooksCubitState {
   final List<BookEntity> books;
 

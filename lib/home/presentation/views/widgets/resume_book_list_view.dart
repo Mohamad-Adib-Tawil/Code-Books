@@ -1,15 +1,6 @@
-// import 'package:code_books/home/domain/entities/book_entity.dart';
-// import 'package:code_books/home/presentation/manger/popular_books_cubit/cubit/popular_books_cubit_cubit.dart';
-// import 'package:code_books/home/presentation/views/widgets/book_list_item.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
-import 'package:code_books/home/presentation/manger/FetchNewestBooksCubit/fetch_newest_books_cubit.dart';
-import 'package:code_books/home/presentation/manger/popular_books_cubit/cubit/popular_books_cubit_cubit.dart';
 import 'package:code_books/home/presentation/views/widgets/book_list_item.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
 
 class ResumeBookListView extends StatefulWidget {
   const ResumeBookListView({

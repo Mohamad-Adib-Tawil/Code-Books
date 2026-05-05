@@ -1,19 +1,15 @@
-// ignore_for_file: depend_on_referenced_packages
-
-import 'dart:developer';
-
-import 'package:bloc/bloc.dart';
 import 'package:code_books/core/errors/failure.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 import 'package:code_books/home/domain/use_cases/fetch_newst_books_use_case.dart';
 import 'package:dartz/dartz.dart';
-import 'package:meta/meta.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 part 'fetch_newest_books_state.dart';
 
 class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
   FetchNewestBooksCubit(this.fetchNewestBooksUseCase)
-      : super(FetchNewestBooksInitial());
+    : super(FetchNewestBooksInitial());
 
   final FetchNewestBooksUseCase fetchNewestBooksUseCase;
 
@@ -22,8 +18,6 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     String searchName = 'programming',
     String sord = 'new',
   }) async {
-    log('Fetching newest books: pageNumber=$pageNumber');
-
     if (pageNumber == 0) {
       emit(NewestBooksLoading());
     } else {
@@ -31,8 +25,11 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     }
 
     try {
-      final result =
-          await fetchNewestBooksUseCase.call(pageNumber, searchName, sord);
+      final result = await fetchNewestBooksUseCase.call(
+        pageNumber,
+        searchName,
+        sord,
+      );
 
       return result.fold(
         (failure) {
@@ -50,7 +47,9 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
       );
     } catch (e) {
       emit(NewestBooksFailure('An unexpected error occurred: ${e.toString()}'));
-      return Left(ServerFailure('An unexpected error occurred: ${e.toString()}'));
+      return Left(
+        ServerFailure('An unexpected error occurred: ${e.toString()}'),
+      );
     }
   }
 
@@ -131,15 +130,17 @@ class FetchNewestBooksCubit extends Cubit<FetchNewestBooksState> {
     required FetchNewestBooksState loadingState,
     required Function(List<BookEntity>) emitState,
   }) async {
-    log('Fetching books: pageNumber=$pageNumber, searchName=$searchName, sord=$sord');
-
     if (pageNumber == 0) {
       emit(NewestBooksLoading());
     } else {
       emit(loadingState);
     }
 
-    var result = await fetchNewestBooksUseCase.call(pageNumber, searchName, sord);
+    var result = await fetchNewestBooksUseCase.call(
+      pageNumber,
+      searchName,
+      sord,
+    );
 
     result.fold(
       (failure) {

@@ -43,3 +43,9 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+RELEASE_AUDIT.md
+
+# Android release signing
+/android/key.properties
+*.jks
+*.keystore

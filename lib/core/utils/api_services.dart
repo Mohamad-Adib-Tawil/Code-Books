@@ -1,24 +1,30 @@
-import 'dart:developer';
 import 'package:code_books/core/errors/failure.dart';
 import 'package:code_books/core/errors/retry.dart';
 import 'package:dio/dio.dart';
-import 'package:dio/dio.dart';
-import 'dart:developer';
 
 class ApiServices {
   final Dio _dio;
-  final String baseUrl = "https://www.googleapis.com/books/v1/";
+  static const String baseUrl = String.fromEnvironment(
+    'GOOGLE_BOOKS_BASE_URL',
+    defaultValue: 'https://www.googleapis.com/books/v1/',
+  );
 
-  ApiServices(this._dio);
+  ApiServices(Dio dio) : _dio = dio {
+    _dio.options = BaseOptions(
+      baseUrl: baseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      sendTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 15),
+      responseType: ResponseType.json,
+    );
+  }
 
   Future<Map<String, dynamic>> get({required String endPoint}) async {
     try {
       var response = await retry(
         () async {
-          final response = await _dio.get('$baseUrl$endPoint');
-          log('ApiServices response ::: $response');
-          log('ApiServices response.data ::: ${response.data}');
-          return response.data;
+          final response = await _dio.get<Map<String, dynamic>>(endPoint);
+          return response.data ?? <String, dynamic>{};
         },
         retries: 3,
         delay: const Duration(seconds: 1),
@@ -26,10 +32,8 @@ class ApiServices {
 
       return response;
     } on DioException catch (e) {
-      log('ApiServices errorDioException ::: $e');
       throw ServerFailure.fromDioException(e);
     } catch (e) {
-      log('ApiServices error ::: $e');
       throw ServerFailure(e.toString());
     }
   }

@@ -8,12 +8,12 @@ class ChapterCard extends StatelessWidget {
   final int chapterNumber;
   final VoidCallback press;
   const ChapterCard({
-    Key? key,
+    super.key,
     required this.name,
     required this.tag,
     required this.chapterNumber,
     required this.press,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +29,7 @@ class ChapterCard extends StatelessWidget {
           BoxShadow(
             offset: const Offset(0, 10),
             blurRadius: 33,
-            color: kShadowColor.withOpacity(.84),
+            color: kShadowColor.withValues(alpha: .84),
           ),
         ],
       ),
@@ -55,12 +55,9 @@ class ChapterCard extends StatelessWidget {
           ),
           const Spacer(),
           IconButton(
-            icon: const Icon(
-              Icons.arrow_forward_ios,
-              size: 18,
-            ),
+            icon: const Icon(Icons.arrow_forward_ios, size: 18),
             onPressed: press,
-          )
+          ),
         ],
       ),
     );

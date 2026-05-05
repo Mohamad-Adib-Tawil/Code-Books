@@ -30,8 +30,9 @@ class _BookStackListViewState extends State<BookStackListView> {
     if (currentPositions >= 0.7 * maxScrollLength) {
       if (!isLoading) {
         isLoading = true;
-        await BlocProvider.of<PopularBooksCubit>(context)
-            .fetchPopualrBooks(pageNumber: nextPage++);
+        await BlocProvider.of<PopularBooksCubit>(
+          context,
+        ).fetchPopualrBooks(pageNumber: nextPage++);
         isLoading = false;
       }
     }
@@ -52,9 +53,7 @@ class _BookStackListViewState extends State<BookStackListView> {
         itemBuilder: (context, index) {
           return SizedBox(
             height: size.height * 0.15,
-            child: BookStackListItem(
-              book: widget.books[index],
-            ),
+            child: BookStackListItem(book: widget.books[index]),
           );
         },
         itemCount: widget.books.length,
@@ -62,9 +61,7 @@ class _BookStackListViewState extends State<BookStackListView> {
         physics: const ClampingScrollPhysics(),
         scrollDirection: Axis.horizontal,
         separatorBuilder: (BuildContext context, int index) {
-          return const SizedBox(
-            width: 20,
-          );
+          return const SizedBox(width: 20);
         },
       ),
     );

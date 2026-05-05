@@ -4,13 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 
 class BookStackListItem extends StatelessWidget {
-  const BookStackListItem({
-    super.key,
-    required this.book,
-  });
+  const BookStackListItem({super.key, required this.book});
   final BookEntity book;
   @override
   Widget build(BuildContext context) {
+    final author = book.authors.isNotEmpty
+        ? book.authors.first
+        : 'Unknown author';
     return SizedBox(
       height: 255,
       width: 194,
@@ -34,9 +34,7 @@ class BookStackListItem extends StatelessWidget {
             child: SizedBox(
               width: 134,
               height: 195,
-              child: CustomBookImage(
-                book: book,
-              ),
+              child: CustomBookImage(book: book),
             ),
           ),
           Positioned(
@@ -48,9 +46,10 @@ class BookStackListItem extends StatelessWidget {
                 book.title,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                    color: kWhiteColor,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold),
+                  color: kWhiteColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
             ),
           ),
@@ -60,12 +59,13 @@ class BookStackListItem extends StatelessWidget {
             child: SizedBox(
               width: 150,
               child: Text(
-                book.authors.first,
+                author,
                 overflow: TextOverflow.ellipsis,
                 style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500),
+                  color: Colors.black,
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
             ),
           ),

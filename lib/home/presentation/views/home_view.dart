@@ -20,23 +20,21 @@ class _HomeViewState extends State<HomeView> {
       if (!mounted) return;
       // Refresh Popular
       context.read<PopularBooksCubit>().fetchPopualrBooks(
-            pageNumber: 0,
-            searchName: 'programming',
-            sord: 'popular',
-          );
+        pageNumber: 0,
+        searchName: 'programming',
+        sord: 'popular',
+      );
       // Refresh All (Newest)
       context.read<FetchNewestBooksCubit>().fetchNewestBooks(
-            pageNumber: 0,
-            searchName: 'programming',
-            sord: 'new',
-          );
+        pageNumber: 0,
+        searchName: 'programming',
+        sord: 'new',
+      );
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: HomeViewBody(),
-    );
+    return const Scaffold(body: HomeViewBody());
   }
 }

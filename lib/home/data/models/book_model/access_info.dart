@@ -24,34 +24,34 @@ class AccessInfo {
   });
 
   factory AccessInfo.fromJson(Map<String, dynamic> json) => AccessInfo(
-        country: json['country'] as String?,
-        viewability: json['viewability'] as String?,
-        embeddable: json['embeddable'] as bool?,
-        publicDomain: json['publicDomain'] as bool?,
-        textToSpeechPermission: json['textToSpeechPermission'] as String?,
-        epub: json['epub'] == null
-            ? null
-            : Epub.fromJson(json['epub'] as Map<String, dynamic>),
-        pdf: json['pdf'] == null
-            ? null
-            : Pdf.fromJson(json['pdf'] as Map<String, dynamic>),
-        webReaderLink: json['webReaderLink'] as String?,
-        accessViewStatus: json['accessViewStatus'] as String?,
-        quoteSharingAllowed: json['quoteSharingAllowed'] as bool?,
-      );
+    country: json['country'] as String?,
+    viewability: json['viewability'] as String?,
+    embeddable: json['embeddable'] as bool?,
+    publicDomain: json['publicDomain'] as bool?,
+    textToSpeechPermission: json['textToSpeechPermission'] as String?,
+    epub: json['epub'] == null
+        ? null
+        : Epub.fromJson(json['epub'] as Map<String, dynamic>),
+    pdf: json['pdf'] == null
+        ? null
+        : Pdf.fromJson(json['pdf'] as Map<String, dynamic>),
+    webReaderLink: json['webReaderLink'] as String?,
+    accessViewStatus: json['accessViewStatus'] as String?,
+    quoteSharingAllowed: json['quoteSharingAllowed'] as bool?,
+  );
 
   Map<String, dynamic> toJson() => {
-        'country': country,
-        'viewability': viewability,
-        'embeddable': embeddable,
-        'publicDomain': publicDomain,
-        'textToSpeechPermission': textToSpeechPermission,
-        'epub': epub?.toJson(),
-        'pdf': pdf?.toJson(),
-        'webReaderLink': webReaderLink,
-        'accessViewStatus': accessViewStatus,
-        'quoteSharingAllowed': quoteSharingAllowed,
-      };
+    'country': country,
+    'viewability': viewability,
+    'embeddable': embeddable,
+    'publicDomain': publicDomain,
+    'textToSpeechPermission': textToSpeechPermission,
+    'epub': epub?.toJson(),
+    'pdf': pdf?.toJson(),
+    'webReaderLink': webReaderLink,
+    'accessViewStatus': accessViewStatus,
+    'quoteSharingAllowed': quoteSharingAllowed,
+  };
 }
 
 class Epub {
@@ -59,13 +59,10 @@ class Epub {
 
   Epub({this.isAvailable});
 
-  factory Epub.fromJson(Map<String, dynamic> json) => Epub(
-        isAvailable: json['isAvailable'] as bool?,
-      );
+  factory Epub.fromJson(Map<String, dynamic> json) =>
+      Epub(isAvailable: json['isAvailable'] as bool?);
 
-  Map<String, dynamic> toJson() => {
-        'isAvailable': isAvailable,
-      };
+  Map<String, dynamic> toJson() => {'isAvailable': isAvailable};
 }
 
 class Pdf {
@@ -75,12 +72,12 @@ class Pdf {
   Pdf({this.isAvailable, this.acsTokenLink});
 
   factory Pdf.fromJson(Map<String, dynamic> json) => Pdf(
-        isAvailable: json['isAvailable'] as bool?,
-        acsTokenLink: json['acsTokenLink'] as String?,
-      );
+    isAvailable: json['isAvailable'] as bool?,
+    acsTokenLink: json['acsTokenLink'] as String?,
+  );
 
   Map<String, dynamic> toJson() => {
-        'isAvailable': isAvailable,
-        'acsTokenLink': acsTokenLink,
-      };
+    'isAvailable': isAvailable,
+    'acsTokenLink': acsTokenLink,
+  };
 }

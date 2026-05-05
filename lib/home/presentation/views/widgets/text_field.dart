@@ -15,7 +15,7 @@ class CustomTextField extends StatelessWidget {
       decoration: BoxDecoration(
         boxShadow: [
           BoxShadow(
-            color: const Color(0xff1d1617).withOpacity(0.11),
+            color: const Color(0xff1d1617).withValues(alpha: 0.11),
             blurRadius: 40,
             spreadRadius: 0.0,
           ),
@@ -34,7 +34,8 @@ class CustomTextField extends StatelessWidget {
           prefixIcon: iconTextField(kSearchIcon),
           suffixIcon: IconButton(
             tooltip: 'Filters',
-            onPressed: () => context.push('${AppRouter.kSearchView}?openFilters=1'),
+            onPressed: () =>
+                context.push('${AppRouter.kSearchView}?openFilters=1'),
             icon: SvgPicture.asset(
               kFilterIcon,
               width: 20,

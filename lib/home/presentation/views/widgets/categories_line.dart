@@ -116,12 +116,10 @@ class _CategoriesLineState extends State<CategoriesLine> {
         width: 85,
         decoration: isSelected
             ? BoxDecoration(
-                color: kPrimaryColor.withOpacity(.5),
+                color: kPrimaryColor.withValues(alpha: .5),
                 borderRadius: BorderRadius.circular(29),
               )
-            : BoxDecoration(
-                borderRadius: BorderRadius.circular(0),
-              ),
+            : BoxDecoration(borderRadius: BorderRadius.circular(0)),
         child: Center(
           child: Text(
             text,

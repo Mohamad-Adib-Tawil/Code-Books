@@ -15,30 +15,29 @@ abstract class AppRouter {
 
   static final router = GoRouter(
     routes: [
-      GoRoute(
-        path: '/',
-        builder: (context, state) => const HomeView(),
-      ),
-      GoRoute(
-        path: kHomeView,
-        builder: (context, state) => const HomeView(),
-      ),
+      GoRoute(path: '/', builder: (context, state) => const HomeView()),
+      GoRoute(path: kHomeView, builder: (context, state) => const HomeView()),
       GoRoute(
         path: kBookDetailsView,
         pageBuilder: (context, state) {
-          final book = state.extra as BookEntity;
+          final extra = state.extra;
+          if (extra is! BookEntity) {
+            return const CupertinoPage(
+              child: Scaffold(
+                body: Center(child: Text('Book details are unavailable.')),
+              ),
+            );
+          }
           return CupertinoPage(
             key: state.pageKey,
-            child: BoookDetailsView(book: book),
+            child: BoookDetailsView(book: extra),
           );
         },
       ),
       GoRoute(
         path: kSearchView,
         pageBuilder: (context, state) {
-          return const CupertinoPage(
-            child: SearchView(),
-          );
+          return const CupertinoPage(child: SearchView());
         },
       ),
     ],

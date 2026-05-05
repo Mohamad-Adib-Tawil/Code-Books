@@ -7,10 +7,7 @@ import '../../../../core/utils/app_router.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 
 class CustomBookImage extends StatelessWidget {
-  const CustomBookImage({
-    Key? key,
-    required this.book,
-  }) : super(key: key);
+  const CustomBookImage({super.key, required this.book});
   final BookEntity book;
   // final BookEntity indexBook;
   @override
@@ -26,17 +23,16 @@ class CustomBookImage extends StatelessWidget {
                 placeholder: (context, url) => CustomFadingWidget(
                   child: SizedBox(
                     child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          color: Colors.grey,
-                        )),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(color: Colors.grey),
+                    ),
                   ),
                 ),
                 // placeholderFadeInDuration: const Duration(milliseconds: 800),
                 imageUrl: book.imageLinksSmallThumbnail,
                 fit: BoxFit.fill,
               )
-            : Image.asset('assets/images/logo_only.png'),
+            : Image.asset('assets/images/logo.png'),
         // Image.asset(image, fit: BoxFit.fill),
       ),
     );

@@ -1,6 +1,6 @@
-import 'dart:developer' as developer;
 import 'dart:math';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:code_books/home/data/models/book_model/book_model.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
 import 'package:code_books/home/presentation/views/widgets/book_rating.dart';
@@ -61,21 +61,13 @@ class _SuggetionBookState extends State<SuggetionBook> {
           });
         }
       } else {
-        developer.log(
-          'Failed to load suggestion books. Status code: ${response.statusCode}',
-        );
         setState(() {
           randomBook = null;
           isLoading = false;
           errorMessage = 'Failed to load books';
         });
       }
-    } catch (e, stackTrace) {
-      developer.log(
-        'Failed to load suggestion books',
-        error: e,
-        stackTrace: stackTrace,
-      );
+    } catch (_) {
       if (mounted) {
         setState(() {
           randomBook = null;
@@ -118,7 +110,9 @@ class _SuggetionBookState extends State<SuggetionBook> {
                 style: const TextStyle(fontSize: 15),
               ),
               TextSpan(
-                text: randomBook!.authors.first,
+                text: randomBook!.authors.isNotEmpty
+                    ? randomBook!.authors.first
+                    : 'Unknown author',
                 style: const TextStyle(color: kSliverColor),
               ),
             ],
@@ -203,8 +197,8 @@ class _SuggetionBookState extends State<SuggetionBook> {
               child:
                   randomBook != null &&
                       randomBook!.imageLinksThumbnail.isNotEmpty
-                  ? Image.network(
-                      randomBook!.imageLinksThumbnail,
+                  ? CachedNetworkImage(
+                      imageUrl: randomBook!.imageLinksThumbnail,
                       width: 150,
                       fit: BoxFit.fitWidth,
                     )

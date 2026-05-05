@@ -35,16 +35,17 @@ class _RotatedTextState extends State<RotatedText> {
             ),
             const SizedBox(height: 4),
             _buildRotatedText(
-                text: 'Trend',
-                isSelected: selectedText == 'Trend',
-                onTap: () {
-                  if (mounted) {
-                    setState(() {
-                      selectedText = 'Trend';
-                      context.read<PopularBooksCubit>().toggleToTrend();
-                    });
-                  }
-                }),
+              text: 'Trend',
+              isSelected: selectedText == 'Trend',
+              onTap: () {
+                if (mounted) {
+                  setState(() {
+                    selectedText = 'Trend';
+                    context.read<PopularBooksCubit>().toggleToTrend();
+                  });
+                }
+              },
+            ),
             const SizedBox(height: 4),
             _buildRotatedText(
               text: 'Popular',

@@ -1,13 +1,8 @@
-import 'package:code_books/contants.dart';
 import 'package:code_books/core/widgets/custom_fading_widget.dart';
-import 'package:code_books/home/presentation/views/widgets/book_item.dart';
 import 'package:flutter/material.dart';
-import 'package:code_books/home/domain/entities/book_entity.dart';
 
 class BookStackPaginationListItem extends StatelessWidget {
-  const BookStackPaginationListItem({
-    super.key,
-  });
+  const BookStackPaginationListItem({super.key});
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -38,10 +33,9 @@ class BookStackPaginationListItem extends StatelessWidget {
                 child: CustomFadingWidget(
                   child: SizedBox(
                     child: ClipRRect(
-                        borderRadius: BorderRadius.circular(16),
-                        child: Container(
-                          color: Colors.grey,
-                        )),
+                      borderRadius: BorderRadius.circular(16),
+                      child: Container(color: Colors.grey),
+                    ),
                   ),
                 ),
               ),
@@ -55,10 +49,9 @@ class BookStackPaginationListItem extends StatelessWidget {
                 height: 2,
                 width: 150,
                 child: ClipRRect(
-                    borderRadius: BorderRadius.circular(16),
-                    child: Container(
-                      color: Colors.grey,
-                    )),
+                  borderRadius: BorderRadius.circular(16),
+                  child: Container(color: Colors.grey),
+                ),
               ),
             ),
           ),
@@ -72,10 +65,9 @@ class BookStackPaginationListItem extends StatelessWidget {
                   height: 2,
                   width: 150,
                   child: ClipRRect(
-                      borderRadius: BorderRadius.circular(16),
-                      child: Container(
-                        color: Colors.grey,
-                      )),
+                    borderRadius: BorderRadius.circular(16),
+                    child: Container(color: Colors.grey),
+                  ),
                 ),
               ),
             ),

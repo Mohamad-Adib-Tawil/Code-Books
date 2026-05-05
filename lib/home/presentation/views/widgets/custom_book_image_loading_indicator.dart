@@ -14,9 +14,7 @@ class _CustomBookImageLoadingIndicatorState
   Widget build(BuildContext context) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(16),
-      child: Container(
-        color: Colors.grey[50],
-      ),
+      child: Container(color: Colors.grey[50]),
       // Image.asset(image, fit: BoxFit.fill),
     );
   }

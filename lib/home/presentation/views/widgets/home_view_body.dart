@@ -15,13 +15,30 @@ import 'package:flutter/material.dart';
 import '../../../../core/utils/styles.dart';
 import 'text_field.dart';
 
-class HomeViewBody extends StatelessWidget {
+class HomeViewBody extends StatefulWidget {
   const HomeViewBody({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final ScrollController scrollController = ScrollController();
+  State<HomeViewBody> createState() => _HomeViewBodyState();
+}
 
+class _HomeViewBodyState extends State<HomeViewBody> {
+  late final ScrollController scrollController;
+
+  @override
+  void initState() {
+    super.initState();
+    scrollController = ScrollController();
+  }
+
+  @override
+  void dispose() {
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return SafeArea(
       child: CustomScrollView(
         controller: scrollController,
@@ -32,10 +49,7 @@ class HomeViewBody extends StatelessWidget {
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomAppBar(),
-                  CustomTextField(),
-                ],
+                children: [CustomAppBar(), CustomTextField()],
               ),
             ),
           ),
@@ -46,10 +60,7 @@ class HomeViewBody extends StatelessWidget {
               child: Row(
                 children: [
                   const SizedBox(width: 10),
-                  const SizedBox(
-                    width: 20,
-                    child: RotatedText(),
-                  ),
+                  const SizedBox(width: 20, child: RotatedText()),
                   const SizedBox(width: 12),
                   SizedBox(
                     width: MediaQuery.of(context).size.width - 50,

@@ -130,12 +130,19 @@ class BookInfoItem extends StatelessWidget {
           flex: 1,
           child: ClipRRect(
             borderRadius: BorderRadius.circular(16),
-            child: CachedNetworkImage(
-              alignment: Alignment.topRight,
-              height: double.infinity,
-              imageUrl: book.imageLinksThumbnail,
-              fit: BoxFit.fill,
-            ),
+            child: book.imageLinksThumbnail.isNotEmpty
+                ? CachedNetworkImage(
+                    alignment: Alignment.topRight,
+                    height: double.infinity,
+                    imageUrl: book.imageLinksThumbnail,
+                    fit: BoxFit.fill,
+                  )
+                : Image.asset(
+                    'assets/images/logo.png',
+                    alignment: Alignment.topRight,
+                    height: double.infinity,
+                    fit: BoxFit.fill,
+                  ),
           ),
         ),
       ],

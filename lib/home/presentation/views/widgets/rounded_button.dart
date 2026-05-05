@@ -28,7 +28,9 @@ class RoundedButton extends StatelessWidget {
         alignment: Alignment.center,
         margin: const EdgeInsets.symmetric(vertical: 16),
         padding: EdgeInsets.symmetric(
-            vertical: verticalPadding, horizontal: horizontalPadding),
+          vertical: verticalPadding,
+          horizontal: horizontalPadding,
+        ),
         decoration: BoxDecoration(
           color: color,
           borderRadius: BorderRadius.circular(30),
@@ -36,16 +38,13 @@ class RoundedButton extends StatelessWidget {
             BoxShadow(
               offset: const Offset(0, 15),
               blurRadius: 30,
-              color: kShadowColor.withOpacity(.6),
+              color: kShadowColor.withValues(alpha: .6),
             ),
           ],
         ),
         child: Text(
           text,
-          style: TextStyle(
-            fontSize: fontSize,
-            fontWeight: FontWeight.bold,
-          ),
+          style: TextStyle(fontSize: fontSize, fontWeight: FontWeight.bold),
         ),
       ),
     );

@@ -70,27 +70,6 @@ class _SearchViewState extends State<SearchView> {
     );
     // Prepare for next page
     _nextPage = 1;
-    _attachScrollListener(query);
-  }
-
-  void _attachScrollListener(String query) {
-    _scrollController.addListener(() {
-      if (_scrollController.offset >= _scrollController.position.maxScrollExtent * 0.8 &&
-          !_scrollController.position.outOfRange &&
-          !_isLoading) {
-        setState(() {
-          _isLoading = true;
-        });
-        context.read<FetchNewestBooksCubit>().fetchNewestBooks(
-          pageNumber: _nextPage,
-          searchName: query,
-          sord: _sort,
-        );
-        setState(() {
-          _nextPage++;
-        });
-      }
-    });
   }
 
   void _openFilters() {
@@ -139,7 +118,7 @@ class _SearchViewState extends State<SearchView> {
                   const Text('Subject', style: TextStyle(color: kSliverColor)),
                   const SizedBox(height: 8),
                   DropdownButtonFormField<String>(
-                    value: tempSubject,
+                    initialValue: tempSubject,
                     dropdownColor: kDarkBlackColor,
                     decoration: const InputDecoration(
                       filled: true,
@@ -183,7 +162,10 @@ class _SearchViewState extends State<SearchView> {
                     }),
                   ),
                   const SizedBox(height: 8),
-                  const Text('Minimum rating', style: TextStyle(color: kSliverColor)),
+                  const Text(
+                    'Minimum rating',
+                    style: TextStyle(color: kSliverColor),
+                  ),
                   Slider(
                     value: _minRating,
                     min: 0,
@@ -282,7 +264,9 @@ class _SearchViewState extends State<SearchView> {
           } else if (state is NewestBooksSuccess) {
             setState(() {
               final filtered = state.books.where((b) {
-                final pagesOk = (b.pageCount >= _pageRange.start && b.pageCount <= _pageRange.end);
+                final pagesOk =
+                    (b.pageCount >= _pageRange.start &&
+                    b.pageCount <= _pageRange.end);
                 final ratingOk = (b.averageRating.toDouble() >= _minRating);
                 return pagesOk && ratingOk;
               }).toList();
@@ -293,7 +277,8 @@ class _SearchViewState extends State<SearchView> {
             setState(() {
               _isLoading = true;
             });
-          } else if (state is NewestBooksFailure || state is NewestBooksPaginationFailure) {
+          } else if (state is NewestBooksFailure ||
+              state is NewestBooksPaginationFailure) {
             setState(() {
               _isLoading = false;
             });
@@ -302,9 +287,15 @@ class _SearchViewState extends State<SearchView> {
         builder: (context, state) {
           return NotificationListener<ScrollNotification>(
             onNotification: (scrollInfo) {
-              if (!_isLoading && scrollInfo.metrics.pixels >= scrollInfo.metrics.maxScrollExtent * 0.8) {
-                final base = _controller.text.trim().isEmpty ? 'programming' : _controller.text.trim();
-                final subjectPart = _subject != 'All' ? '+subject:${_subject.toLowerCase()}' : '';
+              if (!_isLoading &&
+                  scrollInfo.metrics.pixels >=
+                      scrollInfo.metrics.maxScrollExtent * 0.8) {
+                final base = _controller.text.trim().isEmpty
+                    ? 'programming'
+                    : _controller.text.trim();
+                final subjectPart = _subject != 'All'
+                    ? '+subject:${_subject.toLowerCase()}'
+                    : '';
                 final query = '$base$subjectPart';
                 _loadNextPage(query);
               }
@@ -339,9 +330,9 @@ class _SearchViewState extends State<SearchView> {
       _isLoading = true;
     });
     context.read<FetchNewestBooksCubit>().fetchNewestBooks(
-          pageNumber: _nextPage++,
-          searchName: query,
-          sord: _sort,
-        );
+      pageNumber: _nextPage++,
+      searchName: query,
+      sord: _sort,
+    );
   }
 }

@@ -4,15 +4,15 @@ import 'package:code_books/home/presentation/views/widgets/book_item.dart';
 import 'package:flutter/material.dart';
 
 class BookListItem extends StatelessWidget {
-  const BookListItem({
-    super.key,
-    required this.book,
-  });
+  const BookListItem({super.key, required this.book});
 
   final BookEntity book;
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
+    final author = book.authors.isNotEmpty
+        ? book.authors.first
+        : 'Unknown author';
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -23,16 +23,12 @@ class BookListItem extends StatelessWidget {
             height: size.height * .15,
             child: CustomBookImage(book: book),
           ),
-          const SizedBox(
-            width: 10,
-          ),
+          const SizedBox(width: 10),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const SizedBox(
-                height: 3,
-              ),
+              const SizedBox(height: 3),
               SizedBox(
                 width: size.width * .52,
                 child: Text(
@@ -40,31 +36,27 @@ class BookListItem extends StatelessWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(
-                      fontWeight: FontWeight.w600, fontSize: 18),
+                    fontWeight: FontWeight.w600,
+                    fontSize: 18,
+                  ),
                 ),
               ),
-              const SizedBox(
-                height: 2,
-              ),
+              const SizedBox(height: 2),
               SizedBox(
                 width: size.width * .52,
                 child: Text(
-                  book.authors.first,
+                  author,
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: const TextStyle(fontSize: 14, color: kSliverColor),
                 ),
               ),
-              const SizedBox(
-                height: 2,
-              ),
+              const SizedBox(height: 2),
               Text(
                 "page count : ${book.pageCount}",
                 style: const TextStyle(fontSize: 16, color: kPrimaryColor),
               ),
-              const SizedBox(
-                height: 2,
-              ),
+              const SizedBox(height: 2),
             ],
           ),
           // const Spacer(),

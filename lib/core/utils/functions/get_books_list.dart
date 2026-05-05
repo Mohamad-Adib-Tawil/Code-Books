@@ -20,4 +20,3 @@ List<BookEntity> getBooksList(Map<String, dynamic> data) {
   }
   return books;
 }
-

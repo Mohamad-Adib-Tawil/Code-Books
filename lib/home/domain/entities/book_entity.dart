@@ -125,10 +125,10 @@ class BookEntity {
 
   @HiveField(39)
   final bool accessInfoQuoteSharingAllowed;
- @HiveField(40)
+  @HiveField(40)
   final num averageRating;
 
-  BookEntity( {
+  BookEntity({
     required this.kindBook,
     required this.idBook,
     required this.etagBook,
@@ -172,55 +172,81 @@ class BookEntity {
     required this.averageRating,
   });
   factory BookEntity.fromJson(Map<String, dynamic> json) {
+    final volumeInfo = json['volumeInfo'] is Map<String, dynamic>
+        ? json['volumeInfo'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final readingModes = volumeInfo['readingModes'] is Map<String, dynamic>
+        ? volumeInfo['readingModes'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final panelizationSummary =
+        volumeInfo['panelizationSummary'] is Map<String, dynamic>
+        ? volumeInfo['panelizationSummary'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final imageLinks = volumeInfo['imageLinks'] is Map<String, dynamic>
+        ? volumeInfo['imageLinks'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final saleInfo = json['saleInfo'] is Map<String, dynamic>
+        ? json['saleInfo'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final accessInfo = json['accessInfo'] is Map<String, dynamic>
+        ? json['accessInfo'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final epub = accessInfo['epub'] is Map<String, dynamic>
+        ? accessInfo['epub'] as Map<String, dynamic>
+        : <String, dynamic>{};
+    final pdf = accessInfo['pdf'] is Map<String, dynamic>
+        ? accessInfo['pdf'] as Map<String, dynamic>
+        : <String, dynamic>{};
+
     return BookEntity(
       kindBook: json['kind'] ?? '',
       idBook: json['id'] ?? '',
       etagBook: json['etag'] ?? '',
       selfLinkBook: json['selfLink'] ?? '',
-      title: json['volumeInfo']['title'] ?? '',
-      authors: json['volumeInfo']['authors'] != null
-          ? List<String>.from(json['volumeInfo']['authors'])
+      title: volumeInfo['title'] ?? '',
+      authors: volumeInfo['authors'] != null
+          ? List<String>.from(volumeInfo['authors'])
           : [],
-      publisher: json['volumeInfo']['publisher'] ?? '',
-      publishedDate: json['volumeInfo']['publishedDate'] ?? '',
-      description: json['volumeInfo']['description'] ?? '',
-      readingModesText: json['volumeInfo']['readingModes']['text'] ?? false,
-      readingModesImage: json['volumeInfo']['readingModes']['image'] ?? false,
-      pageCount: json['volumeInfo']['pageCount'] ?? 0,
-      printType: json['volumeInfo']['printType'] ?? '',
-      categories: json['volumeInfo']['categories'] != null
-          ? List<String>.from(json['volumeInfo']['categories'])
+      publisher: volumeInfo['publisher'] ?? '',
+      publishedDate: volumeInfo['publishedDate'] ?? '',
+      description: volumeInfo['description'] ?? '',
+      readingModesText: readingModes['text'] ?? false,
+      readingModesImage: readingModes['image'] ?? false,
+      pageCount: volumeInfo['pageCount'] ?? 0,
+      printType: volumeInfo['printType'] ?? '',
+      categories: volumeInfo['categories'] != null
+          ? List<String>.from(volumeInfo['categories'])
           : [],
-      maturityRating: json['volumeInfo']['maturityRating'] ?? '',
-      allowAnonLogging: json['volumeInfo']['allowAnonLogging'] ?? false,
-      contentVersion: json['volumeInfo']['contentVersion'] ?? '',
-      panelizationContainsEpubBubbles: json['volumeInfo']['panelizationSummary']?['containsEpubBubbles'] ?? false,
-      panelizationContainsImageBubbles: json['volumeInfo']['panelizationSummary']?['containsImageBubbles'] ?? false,
-      imageLinksSmallThumbnail: json['volumeInfo']['imageLinks']?['smallThumbnail'] ?? '',
-      imageLinksThumbnail: json['volumeInfo']['imageLinks']?['thumbnail'] ?? '',
-      language: json['volumeInfo']['language'] ?? '',
-      previewLink: json['volumeInfo']['previewLink'] ?? '',
-      infoLink: json['volumeInfo']['infoLink'] ?? '',
-      canonicalVolumeLink: json['volumeInfo']['canonicalVolumeLink'] ?? '',
-      saleInfoCountry: json['saleInfo']['country'] ?? '',
-      saleInfoSaleability: json['saleInfo']['saleability'] ?? '',
-      saleInfoIsEbook: json['saleInfo']['isEbook'] ?? false,
-      accessInfoCountry: json['accessInfo']['country'] ?? '',
-      accessInfoViewability: json['accessInfo']['viewability'] ?? '',
-      accessInfoEmbeddable: json['accessInfo']['embeddable'] ?? false,
-      accessInfoPublicDomain: json['accessInfo']['publicDomain'] ?? false,
-      accessInfoTextToSpeechPermission: json['accessInfo']['textToSpeechPermission'] ?? '',
-      accessInfoEpubIsAvailable: json['accessInfo']['epub']['isAvailable'] ?? false,
-      accessInfoPdfIsAvailable: json['accessInfo']['pdf']['isAvailable'] ?? false,
-      accessInfoPdfAcsTokenLink: json['accessInfo']['pdf']['acsTokenLink'] ?? '',
-      accessInfoWebReaderLink: json['accessInfo']['webReaderLink'] ?? '',
-      accessInfoAccessViewStatus: json['accessInfo']['accessViewStatus'] ?? '',
-      accessInfoQuoteSharingAllowed: json['accessInfo']['quoteSharingAllowed'] ?? false,
+      maturityRating: volumeInfo['maturityRating'] ?? '',
+      allowAnonLogging: volumeInfo['allowAnonLogging'] ?? false,
+      contentVersion: volumeInfo['contentVersion'] ?? '',
+      panelizationContainsEpubBubbles:
+          panelizationSummary['containsEpubBubbles'] ?? false,
+      panelizationContainsImageBubbles:
+          panelizationSummary['containsImageBubbles'] ?? false,
+      imageLinksSmallThumbnail: imageLinks['smallThumbnail'] ?? '',
+      imageLinksThumbnail: imageLinks['thumbnail'] ?? '',
+      language: volumeInfo['language'] ?? '',
+      previewLink: volumeInfo['previewLink'] ?? '',
+      infoLink: volumeInfo['infoLink'] ?? '',
+      canonicalVolumeLink: volumeInfo['canonicalVolumeLink'] ?? '',
+      saleInfoCountry: saleInfo['country'] ?? '',
+      saleInfoSaleability: saleInfo['saleability'] ?? '',
+      saleInfoIsEbook: saleInfo['isEbook'] ?? false,
+      accessInfoCountry: accessInfo['country'] ?? '',
+      accessInfoViewability: accessInfo['viewability'] ?? '',
+      accessInfoEmbeddable: accessInfo['embeddable'] ?? false,
+      accessInfoPublicDomain: accessInfo['publicDomain'] ?? false,
+      accessInfoTextToSpeechPermission:
+          accessInfo['textToSpeechPermission'] ?? '',
+      accessInfoEpubIsAvailable: epub['isAvailable'] ?? false,
+      accessInfoPdfIsAvailable: pdf['isAvailable'] ?? false,
+      accessInfoPdfAcsTokenLink: pdf['acsTokenLink'] ?? '',
+      accessInfoWebReaderLink: accessInfo['webReaderLink'] ?? '',
+      accessInfoAccessViewStatus: accessInfo['accessViewStatus'] ?? '',
+      accessInfoQuoteSharingAllowed: accessInfo['quoteSharingAllowed'] ?? false,
       searchInfoTextSnippet: json['searchInfo']?['textSnippet'] ?? '',
-      averageRating: json['volumeInfo']['averageRating'] ?? 0,
+      averageRating: volumeInfo['averageRating'] ?? 0,
     );
   }
-
 }
-
-

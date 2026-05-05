@@ -1,4 +1,3 @@
-
 // import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 
 // class RoomBodyListViewWidget extends StatefulWidget {
@@ -123,18 +122,6 @@
 //     );
 //   }
 
-
-
-
-
-
-
-
-
-
-
-
-
 // class HomeViewBody extends StatelessWidget {
 //   const HomeViewBody({super.key});
 
@@ -192,7 +179,7 @@
 //                 const Text('Other Books', style: Styles.textStyle30),
 //                 const SizedBox(height: 10),
 //                 SizedBox(
-//                   height: MediaQuery.of(context).size.height 
+//                   height: MediaQuery.of(context).size.height
 //                   , // Example fixed height
 //                   child: const ResumeBookListItemBlocConsumer(),
 //                 ),
@@ -204,13 +191,6 @@
 //     );
 //   }
 // }
-
-
-
-
-
-
-
 
 // // import 'package:code_books/home/domain/entities/book_entity.dart';
 // // import 'package:code_books/home/presentation/manger/popular_books_cubit/cubit/popular_books_cubit_cubit.dart';

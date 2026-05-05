@@ -28,9 +28,7 @@ class _BookStackListViewLoadingIndicatorState
           itemCount: 15,
           scrollDirection: Axis.horizontal,
           separatorBuilder: (BuildContext context, int index) {
-            return const SizedBox(
-              width: 20,
-            );
+            return const SizedBox(width: 20);
           },
         ),
       ),

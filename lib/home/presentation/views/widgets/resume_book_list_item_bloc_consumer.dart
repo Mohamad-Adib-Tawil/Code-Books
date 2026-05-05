@@ -1,12 +1,4 @@
-// import 'package:code_books/home/domain/entities/book_entity.dart';
-// import 'package:code_books/home/presentation/manger/ Newest_books_cubit/cubit/ Newest_books_cubit_cubit.dart';
-// import 'package:code_books/home/presentation/views/widgets/resume_book_list_view.dart';
-// import 'package:flutter/material.dart';
-// import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:code_books/core/utils/functions/setup_service_locator.dart';
-import 'package:code_books/home/data/repos_data/home_repo_impl.dart';
 import 'package:code_books/home/domain/entities/book_entity.dart';
-import 'package:code_books/home/domain/use_cases/fetch_newst_books_use_case.dart';
 import 'package:code_books/home/presentation/manger/FetchNewestBooksCubit/fetch_newest_books_cubit.dart';
 import 'package:code_books/home/presentation/views/widgets/resume_book_list_view.dart';
 import 'package:code_books/home/presentation/views/widgets/resume_book_pagination_loading_list_view.dart';
@@ -20,8 +12,10 @@ import 'package:hive/hive.dart';
 enum CurrentCategory { all, flutter, algorithms, javascript, python, php }
 
 class ResumeBookListItemBlocConsumer extends StatefulWidget {
-  const ResumeBookListItemBlocConsumer(
-      {super.key, required this.scrollController});
+  const ResumeBookListItemBlocConsumer({
+    super.key,
+    required this.scrollController,
+  });
 
   final ScrollController scrollController;
 
@@ -79,7 +73,9 @@ class _ResumeBookListItemBlocConsumerState
         Future<void> future = Future.value();
         switch (currentCategory) {
           case CurrentCategory.all:
-            future = cubit.fetchNewestBooks(pageNumber: nextPage++).then((_) {});
+            future = cubit
+                .fetchNewestBooks(pageNumber: nextPage++)
+                .then((_) {});
             break;
           case CurrentCategory.flutter:
             future = cubit.toggleToFlutter(pageNumber: nextPage++);
@@ -214,13 +210,13 @@ class _ResumeBookListItemBlocConsumerState
             });
           }
         } else if (state is NewestBooksFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildErrorWidget(state.errMessage),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(buildErrorWidget(state.errMessage));
         } else if (state is NewestBooksPaginationFailure) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            buildErrorWidget(state.errMessage),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(buildErrorWidget(state.errMessage));
         }
       },
       builder: (context, state) {
@@ -299,10 +295,7 @@ class _ResumeBookListItemBlocConsumerState
               child: SlideTransition(position: slide, child: widget),
             );
           },
-          child: KeyedSubtree(
-            key: ValueKey(visualCategory),
-            child: child,
-          ),
+          child: KeyedSubtree(key: ValueKey(visualCategory), child: child),
         );
       },
     );
