@@ -1,17 +1,144 @@
-# code_books
+# Code Books
 
-A new Flutter project.
+تطبيق Flutter لعرض واستكشاف كتب البرمجة والتقنية باستخدام Google Books API، مع تجربة قراءة داخلية، بحث وفلاتر، تخزين محلي للنتائج، وبنية كود مقسمة إلى طبقات قابلة للتوسع والصيانة.
 
-## Getting Started
+## نظرة عامة
 
-This project is a starting point for a Flutter application.
+Code Books يركز على توفير تجربة سريعة ومنظمة لتصفح الكتب المجانية والمتاحة للمعاينة، خصوصًا في مجالات البرمجة، التقنية، وعلوم الحاسب. يعتمد التطبيق على جلب البيانات من Google Books، ثم حفظ النتائج محليًا باستخدام Hive لتقليل طلبات الشبكة وتحسين سرعة العرض عند إعادة فتح التطبيق.
 
-A few resources to get you started if this is your first Flutter project:
+## الميزات
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+- عرض كتب شائعة وكتب حديثة في الصفحة الرئيسية.
+- البحث عن الكتب، المواضيع، والمؤلفين.
+- فلاتر للبحث حسب الترتيب، التصنيف، عدد الصفحات، والتقييم الأدنى.
+- صفحة تفاصيل لكل كتاب تتضمن معلومات الكتاب الأساسية.
+- فتح معاينة القراءة داخل التطبيق عبر WebView.
+- دعم التخزين المحلي للنتائج باستخدام Hive.
+- معالجة أخطاء الشبكة باستخدام Dio مع إعادة المحاولة.
+- تنقل واضح باستخدام GoRouter.
+- إدارة حالة باستخدام Cubit من flutter_bloc.
+- تصميم داكن مخصص مناسب لتطبيق قراءة ومراجعة كتب.
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-# Code-Books-
+## التقنيات المستخدمة
+
+- Flutter و Dart null-safety.
+- flutter_bloc لإدارة الحالة.
+- go_router للتنقل.
+- dio لتنفيذ طلبات HTTP.
+- dartz للتعامل مع نتائج النجاح والفشل.
+- get_it لحقن الاعتماديات.
+- hive و hive_flutter للتخزين المحلي.
+- cached_network_image لتحسين تحميل صور الكتب.
+- webview_flutter لعرض معاينة القراءة.
+- flutter_svg لدعم أيقونات SVG.
+
+## بنية المشروع
+
+```text
+lib/
+  core/
+    errors/
+    use_cases/
+    utils/
+    widgets/
+  features/
+    pdf/
+      presentation/
+  home/
+    data/
+      data_sources/
+      models/
+      repos_data/
+    domain/
+      entities/
+      repos_domain/
+      use_cases/
+    presentation/
+      manger/
+      views/
+        widgets/
+```
+
+يعتمد المشروع على فصل المسؤوليات بشكل واضح:
+
+- `data`: جلب البيانات من API والتخزين المحلي.
+- `domain`: الكيانات، العقود، وحالات الاستخدام.
+- `presentation`: الواجهات، Cubits، وحالات العرض.
+- `core`: الخدمات المشتركة، الأخطاء، التنقل، الثيم، والأدوات العامة.
+
+## مصدر البيانات
+
+يستخدم التطبيق Google Books API عبر المسار الأساسي:
+
+```text
+https://www.googleapis.com/books/v1/
+```
+
+يمكن تغيير المسار الأساسي وقت البناء باستخدام:
+
+```bash
+flutter run --dart-define=GOOGLE_BOOKS_BASE_URL=https://www.googleapis.com/books/v1/
+```
+
+## متطلبات التشغيل
+
+- Flutter SDK متوافق مع Dart `^3.8.1`.
+- Android Studio أو Xcode حسب المنصة المستهدفة.
+- جهاز حقيقي أو محاكي Android/iOS.
+
+تحقق من بيئة Flutter:
+
+```bash
+flutter doctor
+```
+
+## تشغيل المشروع
+
+1. تحميل الاعتماديات:
+
+```bash
+flutter pub get
+```
+
+2. توليد ملفات Hive عند الحاجة:
+
+```bash
+dart run build_runner build --delete-conflicting-outputs
+```
+
+3. تشغيل التطبيق:
+
+```bash
+flutter run
+```
+
+## الاختبارات والتحقق
+
+قبل تسليم أي تعديل، يفضل تشغيل الأوامر التالية:
+
+```bash
+flutter analyze
+flutter test
+```
+
+وللتحقق اليدوي:
+
+- افتح الصفحة الرئيسية وتأكد من ظهور قوائم الكتب.
+- جرّب البحث بكلمات مثل `flutter` أو `algorithms`.
+- افتح الفلاتر وغيّر الترتيب أو التصنيف.
+- افتح تفاصيل كتاب ثم جرّب معاينة القراءة.
+- أغلق التطبيق وافتحه مجددًا للتأكد من عمل التخزين المحلي.
+
+## السياسات
+
+توجد ملفات سياسة الخصوصية داخل مجلد `docs`:
+
+- [سياسة الخصوصية بالعربية](docs/privacy_policy_ar.md)
+- [Privacy Policy in English](docs/privacy_policy_en.md)
+
+## ملاحظات هندسية
+
+- التطبيق لا يتطلب مفتاح API في الإعداد الحالي لأنه يستخدم نقاط Google Books العامة.
+- بعض نتائج الكتب قد لا تحتوي على معاينة قراءة كاملة، ويعتمد ذلك على البيانات المتاحة من Google Books.
+- التخزين المحلي مبني على Hive boxes مخصصة حسب نوع القائمة وكلمة البحث.
+- عند إضافة ميزات جديدة، يفضل الالتزام بالفصل الحالي بين `data`, `domain`, و `presentation`.
