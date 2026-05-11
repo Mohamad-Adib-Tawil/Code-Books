@@ -13,10 +13,13 @@ class BookInfoItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final canReadOnline =
+    final canReadPdf = book.accessInfoPdfIsAvailable;
+    final canReadDemoWeb =
         book.accessInfoEmbeddable &&
         (book.accessInfoWebReaderLink.isNotEmpty ||
             book.previewLink.isNotEmpty);
+    final canRead = canReadPdf || canReadDemoWeb;
+    final readButtonText = canReadPdf ? 'Read PDF' : 'Read Demo Web';
     final splitIndex = book.title.indexOf(' ', book.title.length ~/ 2);
     final size = MediaQuery.of(context).size;
 
@@ -74,34 +77,33 @@ class BookInfoItem extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Container(
-                        margin: EdgeInsets.only(top: size.height * .015),
-                        padding: const EdgeInsets.only(left: 10, right: 10),
-                        decoration: BoxDecoration(
-                          color: canReadOnline ? kPrimaryColor : kSliverColor,
-                          borderRadius: BorderRadius.circular(30),
-                        ),
-                        child: TextButton(
-                          onPressed: canReadOnline
-                              ? () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          PDFViewerScreen(book: book),
-                                    ),
-                                  );
-                                }
-                              : null,
-                          child: Text(
-                            canReadOnline ? "Read" : "Unavailable",
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              color: canReadOnline ? kWhiteColor : kBlackColor,
+                      if (canRead)
+                        Container(
+                          margin: EdgeInsets.only(top: size.height * .015),
+                          padding: const EdgeInsets.only(left: 10, right: 10),
+                          decoration: BoxDecoration(
+                            color: kPrimaryColor,
+                            borderRadius: BorderRadius.circular(30),
+                          ),
+                          child: TextButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      PDFViewerScreen(book: book),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              readButtonText,
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: kWhiteColor,
+                              ),
                             ),
                           ),
                         ),
-                      ),
                     ],
                   ),
                   Column(
