@@ -1,0 +1,15 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node -e \"\nconst input = JSON.parse(require('fs').readFileSync('/dev/stdin','utf8'));\nconst file = input.tool_input?.file_path || '';\nif (!file.endsWith('.dart') || file.endsWith('.g.dart') || file.endsWith('.freezed.dart')) process.exit(0);\nlet claudeMd = '';\nif (file.includes('/home/')) claudeMd = 'lib/home/CLAUDE.md';\nelse if (file.includes('/features/pdf/')) claudeMd = 'lib/features/pdf/CLAUDE.md';\nelse if (file.includes('/core/')) claudeMd = 'lib/core/CLAUDE.md';\nif (!claudeMd) process.exit(0);\nprocess.stdout.write(JSON.stringify({\\n  type: 'text',\\n  text: '⚠️  CLAUDE.md reminder: You edited ' + file.split('/lib/')[1] + ' — if you changed a public interface, class name, or added a feature, update ' + claudeMd + ' before finishing.'\\n}));\n\""
+          }
+        ]
+      }
+    ]
+  }
+}
